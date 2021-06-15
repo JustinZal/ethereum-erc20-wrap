@@ -1,8 +1,9 @@
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.5;
 
 contract ETHWrap {
-
     address private exchangeAddress;
+    mapping(address => uint256) balances;
+    mapping(address => uint256) approvals;
 
     constructor (address _exchangeAddress) {
         require(_exchangeAddress != address(0));
@@ -13,4 +14,16 @@ contract ETHWrap {
         return exchangeAddress;
     }
 
+    function wrap() public payable {
+        balances[msg.sender] += msg.value;
+    }
+
+    function approve(uint256 amount) public {
+        approvals[msg.sender] = amount;
+    }
+
+    function wrapAndApprove(uint256 amount) public payable {
+        wrap();
+        approve(amount);
+    }
 }
